@@ -1,0 +1,137 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 385
+y 212
+w 300
+h 200
+font "arial-medium-r-18.0"
+ctlFont "arial-medium-r-18.0"
+btnFont "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 14
+ctlFgColor2 index 0
+ctlBgColor1 index 0
+ctlBgColor2 index 14
+topShadowColor index 0
+botShadowColor index 14
+endScreenProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 151
+y 122
+w 119
+h 22
+controlPv "BL99I-LCH-IOC-01:AO"
+fgColor index 14
+fgAlarm
+bgColor index 0
+fill
+font "arial-medium-r-18.0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 28
+y 123
+w 82
+h 21
+font "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "AO Value"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 23
+y 70
+w 93
+h 21
+font "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Raw Ouput"
+}
+autoSize
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 151
+y 69
+w 119
+h 22
+controlPv "BL99I-LCH-IOC-01:SCALE.VAL"
+fgColor index 14
+fgAlarm
+bgColor index 0
+fill
+font "arial-medium-r-18.0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 32
+y 17
+w 74
+h 21
+font "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Input (%)"
+}
+autoSize
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 152
+y 17
+w 116
+h 31
+controlPv "BL99I-LCH-IOC-01:SCALE.A"
+fgColor index 14
+fgAlarm
+bgColor index 0
+fill
+font "arial-medium-r-18.0"
+endObjectProperties
+

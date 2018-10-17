@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<components arch="linux-x86_64">
+	<!--<EPICS_BASE.EpicsEnvSet key="IOCSH_PS1" name="prompt" value="BL99I-MOTEST-IOC-01 &gt;"/>-->
+	<!--<EPICS_BASE.EpicsEnvSet key="EPICS_CA_MAX_ARRAY_BYTES" value="10000000"/>-->
+	<pmac.pmacAsynIPPort IP="172.23.104.193" name="BRICK1port"/>
+	<pmac.GeoBrick P="BL99I-LCH-STEP-01" Port="BRICK1port" name="BRICK1"/>
+	<pmac.dls_pmac_asyn_motor ADDR="1" DESC="Zoom lens 1" DHLM="20.468" DLLM="-15.892" EGU="mm" HLM="36.4" LLM="0.04" M=":ZOOM:LENS1" MRES="0.0004" OFF="15.9316" P="BL99I-LCH-MO-01" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="0.1" VELO="2" name="ZOOML1"/>
+	<pmac.dls_pmac_asyn_motor ADDR="2" DESC="Zoom lens 2" DHLM="14.468" DLLM="-24.732" EGU="mm" HLM="56.4" LLM="17.2" M=":ZOOM:LENS2" MRES="0.0004" OFF="41.9316" P="BL99I-LCH-MO-01" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="0.1" VELO="2" name="ZOOML2"/>
+	<pmac.CS CS="3" Controller="BRICK1" PLCNum="18" name="CS3"/>
+	<pmac.dls_pmac_cs_asyn_motor ADDR="8" DESC="Zoom gap" DHLM="17" DLLM="2" EGU="mm" HLM="17" LLM="2" M=":ZOOM:GAP" MRES="0.0001" P="BL99I-LCH-MO-01" PORT="CS3" PREC="3" TWV="1" VELO="4"/>
+	<pmac.dls_pmac_cs_asyn_motor ADDR="7" DESC="Zoom cen" DHLM="42.5" DLLM="13" EGU="mm" HLM="42.5" LLM="13" M=":ZOOM:CENTRE" MRES="0.0001" P="BL99I-LCH-MO-01" PORT="CS3" PREC="3" TWV="1" VELO="4"/>
+	<pmac.pmacDisableLimitsCheck Axis="1" Controller="BRICK1"/>
+	<pmac.pmacDisableLimitsCheck Axis="2" Controller="BRICK1"/>
+</components>
