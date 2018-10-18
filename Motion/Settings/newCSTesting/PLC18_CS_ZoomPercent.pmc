@@ -1,9 +1,15 @@
 ;####################################################
 ; DO NOT MODIFY: File created from src/PLC18_CS_Zoom.psub
 ;####################################################
-
+;https://www.desmos.com/calculator/8keeh1pt5l
 
 CLOSE
+;
+
+;CS to control fetura zoom unit. This will borrow allot from the 2 slit blade CS
+;
+;y = a(x - h)^2 + k
+;GAP = 0.075*(CENTRE-28)^2 + 2.2
 
 ;################################################
 ;; \file
@@ -37,23 +43,42 @@ CLOSE
 #define BMMRES P(4800+1)
 #define BMOFF  P(4900+1)
 
+#define c1 40.92819
+#define c2 -0.7476464
+#define c3 -0.1402239
+#define c4 0.006035055
+#define c5 -0.00007205061
+#define c6 0.0000002317203
+
+#define CENTRE_MIN 11.5
+#define CENTRE_STROKE 33.5
+
 ; Calculate gap and centre from blade positions
 #define BPPOS (BPMRES*P2+BPOFF)
 #define BMPOS (BMMRES*P1+BMOFF)
-#define CENTRE Q7
-#define GAP Q8
+#define ZOOM Q7
+#define CENTRE Q117
+
 OPEN FORWARD
 CLEAR
     CENTRE = (BPPOS + BMPOS)/2
-    GAP = BPPOS - BMPOS
+	ZOOM = (CENTRE - CENTRE_MIN)*(100/CENTRE_STROKE) 
 CLOSE
 
+;P3=EXP(P2*LN(P1))
 ; Calculate blade positions in cts from gap and centre
 #define BPPOS Q228
 #define BMPOS Q229
+#define GAP Q217
+#define CENTRE Q218
+#define A Q219
 OPEN INVERSE
 CLEAR
     ; calculate in EGUs
+    ;A =(CENTRE - xOffset)*(CENTRE - xOffset)
+    ;GAP = (factor*A) + yOffset
+	CENTRE = (ZOOM/(100/CENTRE_STROKE)) + CENTRE_MIN
+	GAP = c1+c2*CENTRE+c3*EXP(2*LN(CENTRE))+c4*EXP(3*LN(CENTRE))+c5*EXP(4*LN(CENTRE))+c6*EXP(5*LN(CENTRE))
     BPPOS = CENTRE + GAP/2
     BMPOS = CENTRE - GAP/2
     ; then in cts
@@ -66,20 +91,20 @@ CLOSE
 ; As forward kinematic, but with Px = mx62/(Ix08*32)
 #define BPPOS (BPMRES*m262/(I208*32)+BPOFF)
 #define BMPOS (BMMRES*m162/(I108*32)+BMOFF)
-#define CENTRE Q87
-#define GAP Q88
+#define ZOOM Q87
+#define CENTRE Q220
 OPEN PLC18
 CLEAR
     ADDRESS&3
+	
     CENTRE = (BPPOS + BMPOS)/2
-    GAP = BPPOS - BMPOS
+	ZOOM = (CENTRE - CENTRE_MIN)*(100/CENTRE_STROKE) 
     ; If blade motor record did the last move, set demands = readbacks
     if (BPMOVE = 1)
     or (BMMOVE = 1)
         BPMOVE = 0
         BMMOVE = 0
         Q77 = Q87
-        Q78 = Q88
     endif
 CLOSE
 ENABLE PLC18

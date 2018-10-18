@@ -1,7 +1,7 @@
 ; GENERATED BL01B-MO-STEP-01
 ; FROM - BL01B-MO-RACK-01.xlsm
 ; FULL LIST 
-; Time Stamp: 15 October 2018             09:59
+; Time Stamp: 18 October 2018             08:45
 ; ASSET: DSC000000
 ; IP: 172.23.104.193        MAC: 00 50 C2 xx xx xx
 ; -----------------------------------------------------
@@ -26,7 +26,7 @@ I16 =  5                ;Rotary Buffer Request On Point
 I17 =  5                ;Rotary Buffer Request Off Point
 I18 =  10               ;Fixed Buffer Full Warning Point
 I19 =  7007             ;Clock Source I-Variable Number
-; I20 = $0              ;MACRO IC 0 Base Address
+; I20 = $78400          ;MACRO IC 0 Base Address
 ; I21 = $0              ;MACRO IC 1 Base Address
 ; I22 = $0              ;MACRO IC 2 Base Address
 ; I23 = $0              ;MACRO IC 3 Base Address
@@ -108,6 +108,14 @@ I98 = $60               ;VME DPRAM Enable
 I99 = $30               ;VME Address Width Control
 ; ----------------
 ; Modified order June 2014. i6800+ then 7100+ then 7000+ to help Macro settings
+I6800 =  6527           ;MaxPhase/PWM Frequency Control
+I6801 =  0              ;Phase Clock Frequency Control 
+I6802 =  3              ;Servo Clock Frequency Control 
+I6803 =  2258           ; Hardware Clock Control 
+I6804 =  15             ;PWM Deadtime/PFM Pulse Width Control
+I6805 = $7FFFC0         ;DAC Strobe Word
+I6806 = $FFFFFE         ;ADC Strobe Word
+I6807 =  3              ;Phase/Servo Clock Direction
 I7100 =  1473           ;MaxPhase/PWM Frequency Control
 I7101 =  3              ;Phase Clock Frequency Control 
 I7102 =  1              ;Servo Clock Frequency Control 
@@ -124,6 +132,9 @@ I7004 =  3              ;PWM Deadtime/PFM Pulse Width Control
 I7005 = $7FFFC0         ;DAC Strobe Word 
 I7006 = $F30DFE         ;ADC Strobe Word 
 I7007 =  0              ;Phase/Servo Clock Direction 
+;MS0,i992=  6527        ;= i6800
+;MS0,i997=  0           ;= i6801
+;MS0,i998=  3           ;= i6802
 ; -----------------------------------------------------
 
 ; End Of Control I0 to I99 Values 

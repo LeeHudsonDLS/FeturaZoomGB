@@ -4,7 +4,6 @@
 ;https://www.desmos.com/calculator/8keeh1pt5l
 
 CLOSE
-;
 
 ;CS to control fetura zoom unit. This will borrow allot from the 2 slit blade CS
 ;
@@ -43,40 +42,27 @@ CLOSE
 #define BMMRES P(4800+1)
 #define BMOFF  P(4900+1)
 
-#define c1 43.33255
-#define c2 -1.284998
-#define c3 -0.09404821
-#define c4 0.004130243
-#define c5 -0.00003429016
-#define c6 -0.00000005674714
-
-#define factor 0.072
-#define xOffset 28.2
-#define yOffset 2.2
 ; Calculate gap and centre from blade positions
 #define BPPOS (BPMRES*P2+BPOFF)
 #define BMPOS (BMMRES*P1+BMOFF)
 #define CENTRE Q7
+#define GAP Q217
+#define A Q218
 
 OPEN FORWARD
 CLEAR
     CENTRE = (BPPOS + BMPOS)/2
+    A = (CENTRE - 28)^2
+    GAP = (0.075*A) + 2.2
 
 CLOSE
 
-;P3=EXP(P2*LN(P1))
 ; Calculate blade positions in cts from gap and centre
 #define BPPOS Q228
 #define BMPOS Q229
-#define GAP Q217
-#define A Q218
 OPEN INVERSE
 CLEAR
     ; calculate in EGUs
-    ;A =(CENTRE - xOffset)*(CENTRE - xOffset)
-    ;GAP = (factor*A) + yOffset
-
-	GAP = c1+c2*CENTRE+c3*EXP(2*LN(CENTRE))+c4*EXP(3*LN(CENTRE))+c5*EXP(4*LN(CENTRE))+c6*EXP(5*LN(CENTRE))
     BPPOS = CENTRE + GAP/2
     BMPOS = CENTRE - GAP/2
     ; then in cts
@@ -90,10 +76,14 @@ CLOSE
 #define BPPOS (BPMRES*m262/(I208*32)+BPOFF)
 #define BMPOS (BMMRES*m162/(I108*32)+BMOFF)
 #define CENTRE Q87
+#define GAP Q237
+#define A Q238
 OPEN PLC18
 CLEAR
     ADDRESS&3
     CENTRE = (BPPOS + BMPOS)/2
+    A = (CENTRE - 28)^2
+    GAP = (0.075*A) + 2.2
     ; If blade motor record did the last move, set demands = readbacks
     if (BPMOVE = 1)
     or (BMMOVE = 1)
@@ -103,3 +93,4 @@ CLEAR
     endif
 CLOSE
 ENABLE PLC18
+
