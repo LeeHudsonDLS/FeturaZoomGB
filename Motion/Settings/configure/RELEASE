@@ -4,8 +4,8 @@ NON_MSI_VARS := $(.VARIABLES)
 
 # PMACUTIL must be specified
 PMACUTIL=     /dls_sw/prod/R3.14.12.3/support/pmacUtil/4-31
+PMACCOORD=      /dls_sw/prod/R3.14.12.3/support/pmacCoord/1-59-8
 
-PMACCOORD=    /dls_sw/work/R3.14.12.3/support/pmacCoord
 PMAC=		  /dls_sw/prod/R3.14.12.3/support/pmac/1-3
 FSWITCH=       /dls_sw/work/R3.14.12.3/support/F_Switch
 TRANS=          /dls_sw/work/R3.14.12.3/support/transfocator

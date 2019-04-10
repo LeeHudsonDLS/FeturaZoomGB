@@ -1,0 +1,12 @@
+substitute "COORD=3"
+substitute "PLC=18"
+substitute "L2=8"
+substitute "L1=7"
+substitute "C1=40.92819"
+substitute "C2=-0.7476464"
+substitute "C3=-0.1402239"
+substitute "C4=0.006035055"
+substitute "C5=-0.00007205061"
+substitute "C6=0.0000002317203"
+
+include "CS_fzoom.pmc"

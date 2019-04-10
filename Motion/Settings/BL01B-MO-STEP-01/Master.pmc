@@ -31,7 +31,11 @@
 ;#include "PLCs/PLC7_kill_when_idle.pmc"
 
 ; Zoom unit slits CS
-#include "PLCs/PLC18_CS_Zoom_GC.pmc"
+;#include "PLCs/PLC18_CS_Zoom_GC.pmc"
+
+; Zoom unit slits CS
+#include "PLCs/PLC18_CS_Zoom.pmc"
+
 
 ; Motion program for the CS moves
 #include "PROGs/PROG10_CS_motion.pmc"

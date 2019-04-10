@@ -1,0 +1,6 @@
+substitute "COORD=3"
+substitute "PLC=18"
+substitute "BP=8"
+substitute "BM=7"
+
+include "CS_fzoom.pmc"

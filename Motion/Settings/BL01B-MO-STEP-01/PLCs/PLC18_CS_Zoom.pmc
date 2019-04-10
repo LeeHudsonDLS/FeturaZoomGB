@@ -1,0 +1,109 @@
+;####################################################
+; DO NOT MODIFY: File created from src/PLC18_CS_Zoom.psub
+;####################################################
+
+
+CLOSE
+
+;################################################
+;; \file
+;; Define motion for Fetura zoom unit. This is an extension of the 2 blade slits CS
+;;
+;; Original Author: Tom Cobb
+;; Modified by: Lee Hudson
+;;
+;; Defined axes:
+;; - X (addr 6) = Zoom percent
+;;
+;; Macros:
+;; - COORD = 3  CS number, e.g. 2
+;; - PLC = 18  PLC number, should be CS number+15, e.g. 17
+;; - L2 = 8  Axisnum for lens 2 (nearest USB port and camera), e.g. 1
+;; - L1 = 7  Axisnum for lens 1 (nearest sample), e.g. 3
+;; - C1 = 40.92819  Polynomial constant 1
+;; - C2 = -0.7476464  Polynomial constant 2
+;; - C3 = -0.1402239  Polynomial constant 3
+;; - C4 = 0.006035055  Polynomial constant 4
+;; - C5 = -0.00007205061  Polynomial constant 5
+;; - C6 = 0.0000002317203  Polynomial constant 6
+;################################################
+
+; Change to CS3
+&3
+
+; Set relevant axes to use kinematics
+#8->I ; Lens2
+#7->I ; Lens1
+
+; These are set by motor_in_cs.template
+#define L2MOVE P(4700+8)
+#define L2MRES P(4800+8)
+#define L2OFF  P(4900+8)
+#define L1MOVE P(4700+7)
+#define L1MRES P(4800+7)
+#define L1OFF  P(4900+7)
+
+; 5th order polynomial constants
+#define c1 40.92819
+#define c2 -0.7476464
+#define c3 -0.1402239
+#define c4 0.006035055
+#define c5 -0.00007205061
+#define c6 0.0000002317203
+
+; Minimum centre position possible whilst still in focus with gap
+#define CENTRE_MIN 11.5
+
+; Maxiumum centre postion possible whilst still in focus - CENTRE_MIN
+#define CENTRE_STROKE 33.5
+
+; Calculate gap and centre from blade positions
+#define L2POS (L2MRES*P8+L2OFF)
+#define L1POS (L1MRES*P7+L1OFF)
+#define ZOOM Q7
+#define CENTRE Q117
+
+OPEN FORWARD
+CLEAR
+    CENTRE = (L2POS + L1POS)/2
+	ZOOM = (CENTRE - CENTRE_MIN)*(100/CENTRE_STROKE) 
+CLOSE
+
+; Calculate blade positions in cts from gap and centre
+#define L2POS Q228
+#define L1POS Q229
+#define GAP Q217
+#define CENTRE Q218
+
+OPEN INVERSE
+CLEAR
+	CENTRE = (ZOOM/(100/CENTRE_STROKE)) + CENTRE_MIN
+	GAP = c1+c2*CENTRE+c3*EXP(2*LN(CENTRE))+c4*EXP(3*LN(CENTRE))+c5*EXP(4*LN(CENTRE))+c6*EXP(5*LN(CENTRE))
+    L2POS = CENTRE + GAP/2
+    L1POS = CENTRE - GAP/2
+    ; then in cts
+    P8 = (L2POS - L2OFF)/L2MRES
+    P7 = (L1POS - L1OFF)/L1MRES
+CLOSE
+
+; A PLC(sx+15) needs to be made to do position reporting
+; Readbacks should be in &{axisnum}Q81..89
+; As forward kinematic, but with Px = mx62/(Ix08*32)
+#define L2POS (L2MRES*m862/(I808*32)+L2OFF)
+#define L1POS (L1MRES*m762/(I708*32)+L1OFF)
+#define ZOOM Q87
+#define CENTRE Q220
+OPEN PLC18
+CLEAR
+    ADDRESS&3
+    CENTRE = (L2POS + L1POS)/2
+	ZOOM = (CENTRE - CENTRE_MIN)*(100/CENTRE_STROKE) 
+    ; If blade motor record did the last move, set demands = readbacks
+    if (L2MOVE = 1)
+    or (L1MOVE = 1)
+        L2MOVE = 0
+        L1MOVE = 0
+        Q77 = Q87
+    endif
+CLOSE
+ENABLE PLC18
