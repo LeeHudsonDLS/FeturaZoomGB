@@ -1,0 +1,6 @@
+Spare folder contains preconfigured motion and builder areas for working spares.
+Notes:
+
+    Use the included custom homing routine as no limits are present
+    .OFF is specific to the unit
+    C1-C6 in the coordinate system is specific to each unit
