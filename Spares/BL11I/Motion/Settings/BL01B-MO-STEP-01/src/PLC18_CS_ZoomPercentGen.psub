@@ -3,4 +3,4 @@ substitute "PLC=18"
 substitute "BP=8"
 substitute "BM=7"
 
-include "CS_blade_slits.pmc"
+include "CS_fzoom.pmc"

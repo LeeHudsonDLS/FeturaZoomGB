@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<components arch="linux-x86_64">
+	<devIocStats.devIocStatsHelper ioc="BL04I-DI-IOC-03" name="DI3"/>
+	<asyn.AsynIP name="ZPORT" port="172.23.104.142:7008"/>
+	<pmac.pmacAsynIPPort IP="172.23.104.193:1025" name="BRICK99port"/>
+	<pmac.GeoBrick IdlePoll="1000" P="BL04I-MO-STEP-99" Port="BRICK99port" name="BRICK99"/>
+	<pmac.CS CS="3" Controller="BRICK99" PLCNum="18" name="CS3"/>
+	<pmac.dls_pmac_asyn_motor ADDR="7" DESC="Zoom lens 1" DHLM="20.468" DLLM="-15.892" EGU="mm" HLM="36.4" LLM="0.04" M=":LENS1" MRES="0.0004" OFF="16.930" P="BL04I-MO-ZOOM-02" PORT="BRICK99" PREC="3" SPORT="BRICK99port" TWV="0.1" VELO="2" name="ZOOM2.LENS1"/>
+	<pmac.dls_pmac_asyn_motor ADDR="8" DESC="Zoom lens 2" DHLM="14.468" DLLM="-24.732" EGU="mm" HLM="56.4" LLM="17.2" M=":LENS2" MRES="0.0004" OFF="42.186" P="BL04I-MO-ZOOM-02" PORT="BRICK99" PREC="3" SPORT="BRICK99port" TWV="0.1" VELO="2" name="ZOOM2.LENS2"/>
+	<!--<pmac.dls_pmac_cs_asyn_motor ADDR="8" DESC="Zoom gap" DHLM="17" DLLM="2" EGU="mm" HLM="17" LLM="2" M=":ZOOM:GAP" MRES="0.0001" P="BL04I-MO-ZOOM-02" PORT="CS3" PREC="3" TWV="1" VELO="4"/>-->
+	<!--<pmac.dls_pmac_cs_asyn_motor ADDR="7" DESC="Zoom cen" DHLM="42.5" DLLM="13" EGU="mm" HLM="42.5" LLM="13" M=":ZOOM:CENTRE" MRES="0.0001" P="BL04I-MO-ZOOM-02" PORT="CS3" PREC="3" TWV="1" VELO="4"/>-->
+	<pmac.dls_pmac_cs_asyn_motor ADDR="7" DESC="Zoom Percent" DHLM="100" DLLM="0" EGU="%" HLM="100" LLM="0" M=":ZOOM" MRES="0.0001" P="BL04I-MO-ZOOM-02" PORT="CS3" PREC="3" TWV="1" VELO="4"/>
+	<pmac.pmacDisableLimitsCheck Axis="7" Controller="BRICK99" name="A7LD"/>
+	<pmac.pmacDisableLimitsCheck Axis="8" Controller="BRICK99" name="A8LD"/>
+	<pmac.autohome GRP1="All" GRP2="Lens 1" GRP3="Lens 2" P="BL04I-MO-ZOOM-02" PLC="11" PORT="BRICK99" name="ZOOM"/>
+</components>

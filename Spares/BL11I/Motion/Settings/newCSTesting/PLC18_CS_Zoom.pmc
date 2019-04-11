@@ -1,21 +1,31 @@
+;####################################################
+; DO NOT MODIFY: File created from src/PLC18_CS_Zoom.psub
+;####################################################
+;https://www.desmos.com/calculator/8keeh1pt5l
+
 CLOSE
 ;
 
+;CS to control fetura zoom unit. This will borrow allot from the 2 slit blade CS
+;
+;y = a(x - h)^2 + k
+;GAP = 0.075*(CENTRE-28)^2 + 2.2
+
 ;################################################
 ;; \file
-;; Define motion for Fetura zoom unit. This is an extension of the 2 blade slits CS
+;; Define motion for 2 slit blades
 ;;
-;; Original Author: Tom Cobb (2 blade slits)
-;; Modified by: Lee Hudson
+;; Original Author: Tom Cobb
 ;;
 ;; Defined axes:
-;; - X (addr 6) = Zoom percent
+;; - X (addr 6) = centre in same EGUs as blade
+;; - Y (addr 7) = gap in same EGUs as blade
 ;;
 ;; Macros:
 ;; - COORD = 3  CS number, e.g. 2
 ;; - PLC = 18  PLC number, should be CS number+15, e.g. 17
-;; - BP = 2  Axisnum for lens 2 (nearest USB port and camera), e.g. 1
-;; - BM = 1  Axisnum for lens 1 (nearest sample), e.g. 3
+;; - BP = 2  Axisnum for Blade+, e.g. 1
+;; - BM = 1  Axisnum for Blade-, e.g. 3
 ;################################################
 
 ; Change to CS3
@@ -33,30 +43,25 @@ CLOSE
 #define BMMRES P(4800+1)
 #define BMOFF  P(4900+1)
 
-; 5th order polynomial constants
-#define c1 40.92819
-#define c2 -0.7476464
-#define c3 -0.1402239
-#define c4 0.006035055
-#define c5 -0.00007205061
-#define c6 0.0000002317203
+#define c1 43.33255
+#define c2 -1.284998
+#define c3 -0.09404821
+#define c4 0.004130243
+#define c5 -0.00003429016
+#define c6 -0.00000005674714
 
-; Minimum centre position possible whilst still in focus with gap
-#define CENTRE_MIN 11.5
-
-; Maxiumum centre postion possible whilst still in focus - CENTRE_MIN
-#define CENTRE_STROKE 33.5
-
+#define factor 0.072
+#define xOffset 28.2
+#define yOffset 2.2
 ; Calculate gap and centre from blade positions
 #define BPPOS (BPMRES*P2+BPOFF)
 #define BMPOS (BMMRES*P1+BMOFF)
-#define ZOOM Q7
-#define CENTRE Q117
+#define CENTRE Q7
 
 OPEN FORWARD
 CLEAR
     CENTRE = (BPPOS + BMPOS)/2
-	ZOOM = (CENTRE - CENTRE_MIN)*(100/CENTRE_STROKE) 
+
 CLOSE
 
 ;P3=EXP(P2*LN(P1))
@@ -64,10 +69,13 @@ CLOSE
 #define BPPOS Q228
 #define BMPOS Q229
 #define GAP Q217
-#define CENTRE Q218
+#define A Q218
 OPEN INVERSE
 CLEAR
-	CENTRE = (ZOOM/(100/CENTRE_STROKE)) + CENTRE_MIN
+    ; calculate in EGUs
+    ;A =(CENTRE - xOffset)*(CENTRE - xOffset)
+    ;GAP = (factor*A) + yOffset
+
 	GAP = c1+c2*CENTRE+c3*EXP(2*LN(CENTRE))+c4*EXP(3*LN(CENTRE))+c5*EXP(4*LN(CENTRE))+c6*EXP(5*LN(CENTRE))
     BPPOS = CENTRE + GAP/2
     BMPOS = CENTRE - GAP/2
@@ -81,14 +89,11 @@ CLOSE
 ; As forward kinematic, but with Px = mx62/(Ix08*32)
 #define BPPOS (BPMRES*m262/(I208*32)+BPOFF)
 #define BMPOS (BMMRES*m162/(I108*32)+BMOFF)
-#define ZOOM Q87
-#define CENTRE Q220
+#define CENTRE Q87
 OPEN PLC18
 CLEAR
     ADDRESS&3
-	
     CENTRE = (BPPOS + BMPOS)/2
-	ZOOM = (CENTRE - CENTRE_MIN)*(100/CENTRE_STROKE) 
     ; If blade motor record did the last move, set demands = readbacks
     if (BPMOVE = 1)
     or (BMMOVE = 1)
